@@ -1,9 +1,7 @@
-use rltk::{Console, GameState, Rltk, VirtualKeyCode, RGB};
-use specs::prelude::*;
-use std::cmp::{max, min};
-
-#[macro_use]
-use specs_derive;
+use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 
 #[path = "game/mod.rs"]
 pub mod game;
+
+#[path = "sys/mod.rs"]
+pub mod sys;
