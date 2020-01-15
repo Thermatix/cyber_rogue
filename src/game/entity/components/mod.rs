@@ -4,17 +4,20 @@ use specs_derive::*;
 
 use std::cmp::{max, min};
 
+mod position;
+mod renderable;
+
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Position {
-    x: u32,
-    y: u32,
+    pub x: i32,
+    pub y: i32,
 }
 
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Renderable {
-    glyph: u8,
-    fg: RGB,
-    bg: RGB,
+    pub glyph: u8,
+    pub fg: RGB,
+    pub bg: RGB,
 }

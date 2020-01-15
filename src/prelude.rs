@@ -1,4 +1,5 @@
-use rltk::{Console, GameState, Rltk, VirtualKeyCode};
+pub use rltk::{Console, Rltk, VirtualKeyCode};
+pub use specs::prelude::*;
 
 #[path = "game/mod.rs"]
 pub mod game;
