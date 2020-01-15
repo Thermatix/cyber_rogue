@@ -21,3 +21,6 @@ pub struct Renderable {
     pub fg: RGB,
     pub bg: RGB,
 }
+
+#[derive(Component)]
+pub struct LeftMover {}

@@ -2,7 +2,8 @@ use crate::game::entity;
 use rltk::{Console, GameState, Rltk};
 use specs::prelude::*;
 
-use crate::game::entity::components::{Position, Renderable};
+use crate::game::entity::*;
+use crate::game::system::*;
 
 pub struct State {
     pub ecs: World,
@@ -15,6 +16,13 @@ impl State {
         s
     }
 
+    fn run_systems(&mut self) {
+        let mut lw = LeftWalker::new();
+        lw.run_now(&self.ecs);
+        self.ecs.maintain();
+    }
+
+    // TODO: move to own system
     fn render_entities(&mut self, ctx: &mut Rltk) {
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
@@ -28,6 +36,9 @@ impl State {
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
+
+        self.run_systems();
+
         self.render_entities(ctx);
     }
 }
