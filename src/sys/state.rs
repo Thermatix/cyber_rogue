@@ -1,5 +1,5 @@
 use crate::game::entity;
-use rltk::{Console, GameState, Rltk};
+use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
 
 use crate::game::entity::*;
@@ -15,10 +15,12 @@ impl State {
         entity::register_components(&mut s.ecs);
         s
     }
-
+    // TODO: dynamically load and execute system
     fn run_systems(&mut self) {
         let mut lw = LeftWalker::new();
+        let mut pw = PlayerMovement::new();
         lw.run_now(&self.ecs);
+        pw.run_now(&self.ecs);
         self.ecs.maintain();
     }
 
@@ -31,6 +33,25 @@ impl State {
             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
         }
     }
+
+    // TODO: figure out way to uniquely identify player
+    fn player_input(&mut self, ctx: &mut Rltk) {
+        use player::Movements::*;
+
+        let mut players = self.ecs.write_storage::<Player>();
+        for player in (&mut players).join() {
+            match ctx.key {
+                None => {}
+                Some(key) => match key {
+                    VirtualKeyCode::Up => player.movements.push(Up(1)),
+                    VirtualKeyCode::Left => player.movements.push(Left(1)),
+                    VirtualKeyCode::Down => player.movements.push(Down(1)),
+                    VirtualKeyCode::Right => player.movements.push(Right(1)),
+                    _ => {}
+                },
+            }
+        }
+    }
 }
 
 impl GameState for State {
@@ -38,6 +59,7 @@ impl GameState for State {
         ctx.cls();
 
         self.run_systems();
+        self.player_input(ctx);
 
         self.render_entities(ctx);
     }

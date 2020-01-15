@@ -18,6 +18,7 @@ fn main() {
             rltk::YELLOW,
             rltk::BLACK,
         ))
+        .with(Player::new())
         .build();
 
     for i in 0..10 {

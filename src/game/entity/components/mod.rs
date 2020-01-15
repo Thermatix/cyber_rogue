@@ -4,6 +4,7 @@ use specs_derive::*;
 
 use std::cmp::{max, min};
 
+pub mod player;
 mod position;
 mod renderable;
 
@@ -24,3 +25,8 @@ pub struct Renderable {
 
 #[derive(Component)]
 pub struct LeftMover {}
+
+#[derive(Component, Debug)]
+pub struct Player {
+    pub movements: Vec<player::Movements>,
+}
