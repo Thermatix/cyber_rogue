@@ -17,6 +17,7 @@ pub struct Position {
 
 #[derive(Component)]
 #[storage(VecStorage)]
+#[derive(PartialEq, Copy, Clone)]
 pub struct Renderable {
     pub glyph: u8,
     pub fg: RGB,
