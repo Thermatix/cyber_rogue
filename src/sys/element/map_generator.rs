@@ -1,5 +1,5 @@
-use super::{Map, TileSet};
+use super::Map;
 
 pub trait MapGenerator {
-    fn create_map(&self, map: &mut Map, tile_set: &TileSet);
+    fn create_map(&self, map: &mut Map);
 }

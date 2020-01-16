@@ -1,30 +1,34 @@
-use super::{Tile, TileSet};
-use crate::game::entity::Renderable;
+use super::{HashMap, Tile, TileSet};
+use crate::game::entity::{GlyphType, Renderable}; //TODO: once file based tilesets are implimented, this line can be removed
 
-impl<'tg> TileSet<'tg> {
+impl TileSet {
     pub fn new() -> Self {
-        Self { list: Vec::new() }
+        Self {
+            list: HashMap::new(),
+        }
     }
 
-    pub fn find(&self, name: &'tg str) -> Tile {
-        self.list[self
-            .list
-            .binary_search_by(|tile| tile.name.cmp(name))
-            .unwrap()]
+    pub fn find(&self, name: &str) -> &Tile {
+        &self.list[name]
+    }
+
+    pub fn insert_tile(&mut self, tile: Tile) {
+        self.list.insert(&tile.name, tile);
     }
 
     // Todo: load tile data from data files
     pub fn load(&mut self) {
-        self.list.push(Tile {
+        use GlyphType::*;
+        self.insert_tile(Tile {
             blocking: true,
             name: "wall",
-            visual: Renderable::new('▓', rltk::GREY, rltk::BROWN4),
+            visual: Renderable::new(vec!['▓'], Static, rltk::BROWN4, rltk::GREY),
         });
 
-        self.list.push(Tile {
+        self.insert_tile(Tile {
             blocking: true,
             name: "floor",
-            visual: Renderable::new('░', rltk::GREY, rltk::BLACK),
+            visual: Renderable::new(vec!['░'], Static, rltk::BLACK, rltk::GREY),
         });
     }
 }

@@ -15,11 +15,14 @@ pub struct Position {
     pub y: i32,
 }
 
-#[derive(Component)]
+pub use renderable::GlyphType;
+
+#[derive(Component, PartialEq, Debug)]
 #[storage(VecStorage)]
-#[derive(PartialEq, Copy, Clone)]
 pub struct Renderable {
-    pub glyph: u8,
+    pub glyph: Vec<u8>,
+    pub kind: GlyphType,
+    pub g_id: usize,
     pub fg: RGB,
     pub bg: RGB,
 }

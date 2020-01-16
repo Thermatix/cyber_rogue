@@ -1,24 +1,44 @@
 use crate::game::entity::Renderable;
 
+use std::collections::HashMap;
+
+// structs
+mod map;
+mod map_list;
 mod tile;
-#[derive(PartialEq, Copy, Clone)]
-pub struct Tile<'t> {
+mod tile_set;
+mod tile_set_list;
+
+// traits
+mod map_generator;
+
+pub use map_generator::MapGenerator;
+
+#[derive(PartialEq, Debug)]
+pub struct Tile {
     pub blocking: bool,
-    pub name: &'t str,
+    pub name: &'static str,
     pub visual: Renderable,
 }
 
-mod tile_set;
-pub struct TileSet<'ts> {
-    pub list: Vec<Tile<'ts>>,
-}
-mod map;
-pub struct Map<'m> {
-    pub tiles: Vec<Tile<'m>>,
-    pub blocking: Vec<bool>,
-    pub height: usize,
-    pub width: usize,
+pub struct TileSet {
+    pub list: HashMap<&'static str, Tile>,
 }
 
-mod map_generator;
-pub use map_generator::MapGenerator;
+pub struct TileSetList {
+    pub tilesets: HashMap<&'static str, TileSet>,
+}
+pub struct Map<'m> {
+    pub name: &'m str,
+    pub tileset: &'m str,
+    pub tiles: Vec<&'m str>,
+    pub blocking: Vec<bool>,
+    pub height: usize,
+    pub y: usize,
+    pub width: usize,
+    pub x: usize,
+}
+
+pub struct MapList<'ml> {
+    pub maps: HashMap<&'ml str, Map<'ml>>,
+}

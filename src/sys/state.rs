@@ -4,6 +4,7 @@ use specs::prelude::*;
 
 use crate::game::entity::*;
 use crate::game::system::*;
+use crate::sys::element;
 
 pub struct State {
     pub ecs: World,
@@ -30,7 +31,26 @@ impl State {
         let renderables = self.ecs.read_storage::<Renderable>();
 
         for (pos, render) in (&positions, &renderables).join() {
-            ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
+            ctx.set(pos.x, pos.y, render.fg, render.bg, *render.g());
+        }
+    }
+
+    fn render_map(&mut self, map_name: &str, ctx: &mut Rltk) {
+        let map_list = &self.ecs.fetch::<element::MapList>();
+        let map = map_list.find(map_name);
+        let tile_list = &self.ecs.fetch::<element::TileSetList>();
+        let tile_set = tile_list.find(&map.tileset);
+        let mut y = 0;
+        let mut x = 0;
+
+        for tn in &map.tiles {
+            let tile = &tile_set.find(tn);
+            ctx.set(x, y, tile.visual.fg, tile.visual.fg, *tile.visual.g());
+            x += 1;
+            if x > map.x as i32 {
+                y += 1;
+                x = 0;
+            }
         }
     }
 
@@ -60,7 +80,7 @@ impl GameState for State {
 
         self.run_systems();
         self.player_input(ctx);
-
+        self.render_map("Test Map", ctx);
         self.render_entities(ctx);
     }
 }
