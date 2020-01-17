@@ -1,8 +1,9 @@
-use crate::game::entity;
 use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
 
-use crate::game::entity::*;
+// Game should not be here really
+use crate::game::entity;
+// use crate::game::entity::*;
 use crate::game::system::*;
 use crate::sys::element;
 
@@ -19,7 +20,7 @@ impl State {
     // TODO: dynamically load and execute system
     fn run_systems(&mut self) {
         let mut lw = LeftWalker::new();
-        let mut pw = PlayerMovement::new();
+        let mut pw = Movement::new();
         lw.run_now(&self.ecs);
         pw.run_now(&self.ecs);
         self.ecs.maintain();
@@ -27,8 +28,8 @@ impl State {
 
     // TODO: move to own system
     fn render_entities(&mut self, ctx: &mut Rltk) {
-        let positions = self.ecs.read_storage::<Position>();
-        let renderables = self.ecs.read_storage::<Renderable>();
+        let positions = self.ecs.read_storage::<entity::Position>();
+        let renderables = self.ecs.read_storage::<entity::Renderable>();
 
         for (pos, render) in (&positions, &renderables).join() {
             ctx.set(pos.x, pos.y, render.fg, render.bg, *render.g());
@@ -45,7 +46,7 @@ impl State {
 
         for tn in &map.tiles {
             let tile = &tile_set.find(tn);
-            ctx.set(x, y, tile.visual.fg, tile.visual.fg, *tile.visual.g());
+            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
             x += 1;
             if x > map.x as i32 {
                 y += 1;
@@ -56,17 +57,18 @@ impl State {
 
     // TODO: figure out way to uniquely identify player
     fn player_input(&mut self, ctx: &mut Rltk) {
-        use player::Movements::*;
+        use entity::Motions::*;
 
-        let mut players = self.ecs.write_storage::<Player>();
-        for player in (&mut players).join() {
+        let mut players = self.ecs.write_storage::<entity::Player>();
+        let mut moves = self.ecs.write_storage::<entity::Motion>();
+        for (player, motion) in (&mut players, &mut moves).join() {
             match ctx.key {
                 None => {}
                 Some(key) => match key {
-                    VirtualKeyCode::Up => player.movements.push(Up(1)),
-                    VirtualKeyCode::Left => player.movements.push(Left(1)),
-                    VirtualKeyCode::Down => player.movements.push(Down(1)),
-                    VirtualKeyCode::Right => player.movements.push(Right(1)),
+                    VirtualKeyCode::Up => motion.motions.push(Up(1)),
+                    VirtualKeyCode::Left => motion.motions.push(Left(1)),
+                    VirtualKeyCode::Down => motion.motions.push(Down(1)),
+                    VirtualKeyCode::Right => motion.motions.push(Right(1)),
                     _ => {}
                 },
             }

@@ -3,8 +3,15 @@ use specs::prelude::*;
 use specs_derive::*;
 
 use std::cmp::{max, min};
+use std::collections::HashMap;
 
-pub mod player;
+use crate::sys::element::Map;
+
+// pub use event_stream::Stream;
+// mod event_stream;
+// mod location;
+mod motion;
+mod player;
 mod position;
 mod renderable;
 
@@ -31,6 +38,26 @@ pub struct Renderable {
 pub struct LeftMover {}
 
 #[derive(Component, Debug)]
-pub struct Player {
-    pub movements: Vec<player::Movements>,
+#[storage(VecStorage)]
+pub struct Player {}
+
+pub use motion::Motions;
+
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct Motion {
+    pub motions: Vec<Motions>,
 }
+
+// #[derive(Component, Debug)]
+// #[storage(VecStorage)]
+// pub struct Location<'l> {
+//     pub stack: Vec<String>,
+//     pub pointer: &'l Map<'l>,
+// }
+
+// #[derive(Component, Debug)]
+// #[storage(VecStorage)]
+// pub struct EventStream {
+//     pub stream: Stream,
+// }

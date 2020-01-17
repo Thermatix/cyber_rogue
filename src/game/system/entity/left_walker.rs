@@ -1,15 +1,22 @@
 use super::super::*;
-
-use super::LeftWalker;
-use crate::game::entity::{LeftMover, Position};
+use crate::game::entity::{
+    LeftMover, Motion,
+    Motions::{Left, Right},
+    Position,
+};
 
 impl<'a> System<'a> for LeftWalker {
-    type SystemData = (ReadStorage<'a, LeftMover>, WriteStorage<'a, Position>);
-    fn run(&mut self, (lefty, mut pos): Self::SystemData) {
-        for (_lefty, pos) in (&lefty, &mut pos).join() {
-            pos.x -= 1;
-            if pos.x < 0 {
-                pos.x = 79;
+    type SystemData = (
+        ReadStorage<'a, LeftMover>,
+        ReadStorage<'a, Position>,
+        WriteStorage<'a, Motion>,
+    );
+    fn run(&mut self, (lefty, positions, mut moves): Self::SystemData) {
+        for (_lefty, pos, motion) in (&lefty, &positions, &mut moves).join() {
+            if pos.x == 0 {
+                motion.motions.push(Right(79));
+            } else {
+                motion.motions.push(Left(1));
             }
         }
     }

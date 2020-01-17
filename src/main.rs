@@ -34,6 +34,7 @@ fn main() {
             rltk::YELLOW,
             rltk::BLACK,
         ))
+        .with(Motion::new())
         .with(Player::new())
         .build();
 
@@ -48,6 +49,7 @@ fn main() {
                 rltk::RED,
                 rltk::BLACK,
             ))
+            .with(Motion::new())
             .with(LeftMover {})
             .build();
     }
