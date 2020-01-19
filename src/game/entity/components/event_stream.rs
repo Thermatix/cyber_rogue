@@ -1,39 +1,51 @@
-use super::{EventStream, HashMap};
+use super::{Component, EventStream, HashMap, VecStorage};
+use std::convert::From;
 use std::convert::Into;
 
 type Events = Vec<Event>;
 pub type Stream = HashMap<String, Events>;
 
 #[derive(PartialEq, Debug)]
-struct Event {
-    pub msg: String,
+pub struct Event {
+    pub message: String,
     pub value: EventValue,
 }
 
 #[derive(PartialEq, Debug)]
-enum EventValue {
+pub enum EventValue {
     Numeric(i32),
+    Bool(bool),
     Text(String),
 }
 
 // let a: Option<String> = animal.into();
+// let b: Option<bool> = animal.into();
+// let b: Option<i32> = animal.into();
 // a.unwrap()
-impl Into<Option<String>> for EventValue {
-    fn into(self) -> Option<String> {
-        match self {
-            EventValue::Text(u) => Some(u),
-            _ => None,
-        }
+
+impl From<i32> for EventValue {
+    fn from(v: i32) -> Self {
+        EventValue::Numeric(v)
     }
 }
 
-// let a: Option<i32> = animal.into();
-// a.unwrap()
-impl Into<Option<i32>> for EventValue {
-    fn into(self) -> Option<i32> {
-        match self {
-            EventValue::Numeric(u) => Some(u),
-            _ => None,
+impl From<String> for EventValue {
+    fn from(v: String) -> Self {
+        EventValue::Text(v)
+    }
+}
+
+impl From<bool> for EventValue {
+    fn from(v: bool) -> Self {
+        EventValue::Bool(v)
+    }
+}
+
+impl Event {
+    pub fn new<V: Into<EventValue>>(message: String, value: V) -> Event {
+        Self {
+            message: message,
+            value: value.into(),
         }
     }
 }
@@ -48,13 +60,13 @@ impl EventStream {
     pub fn add(&mut self, channel: &str, event: Event) {
         let chnl = channel.to_owned();
         if !self.stream.contains_key(&chnl) {
-            self.stream.insert(chnl, Events::new());
+            self.stream.insert(chnl.clone(), Events::new());
         }
 
-        self.stream[&chnl].push(event);
+        self.stream.get_mut(&chnl).unwrap().push(event);
     }
 
-    pub fn pop(&mut self, channel: &str) -> Option<Event> {
-        self.stream[channel].pop()
+    pub fn pop(&mut self, channel: &str) -> Option<&mut Events> {
+        self.stream.get_mut(channel)
     }
 }

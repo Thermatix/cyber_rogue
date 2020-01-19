@@ -10,6 +10,7 @@ use crate::sys::element::Map;
 // pub use event_stream::Stream;
 // mod event_stream;
 // mod location;
+mod event_stream;
 mod motion;
 mod player;
 mod position;
@@ -56,8 +57,8 @@ pub struct Motion {
 //     pub pointer: &'l Map<'l>,
 // }
 
-// #[derive(Component, Debug)]
-// #[storage(VecStorage)]
-// pub struct EventStream {
-//     pub stream: Stream,
-// }
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct EventStream {
+    pub stream: event_stream::Stream,
+}
