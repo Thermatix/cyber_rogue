@@ -1,22 +1,18 @@
 use super::super::*;
-use crate::game::entity::{
-    LeftMover, Motion,
-    Motions::{Left, Right},
-    Position,
-};
+use crate::game::entity::{EventStream, LeftMover, Position};
 
 impl<'a> System<'a> for LeftWalker {
     type SystemData = (
         ReadStorage<'a, LeftMover>,
         ReadStorage<'a, Position>,
-        WriteStorage<'a, Motion>,
+        WriteStorage<'a, EventStream>,
     );
-    fn run(&mut self, (lefty, positions, mut moves): Self::SystemData) {
-        for (_lefty, pos, motion) in (&lefty, &positions, &mut moves).join() {
+    fn run(&mut self, (lefty, positions, mut events): Self::SystemData) {
+        for (_lefty, pos, events) in (&lefty, &positions, &mut events).join() {
             if pos.x == 0 {
-                motion.motions.push(Right(79));
+                events.add_to_channel("motions", ("r", 79));
             } else {
-                motion.motions.push(Left(1));
+                events.add_to_channel("motions", ("l", 1));
             }
         }
     }

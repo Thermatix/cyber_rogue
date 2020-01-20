@@ -9,5 +9,4 @@ pub fn register_components(ecs: &mut impl WorldExt) {
     ecs.register::<LeftMover>();
     ecs.register::<Player>();
     ecs.register::<EventStream>();
-    ecs.register::<Motion>();
 }

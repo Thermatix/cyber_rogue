@@ -10,8 +10,7 @@ use crate::sys::element::Map;
 // pub use event_stream::Stream;
 // mod event_stream;
 // mod location;
-mod event_stream;
-mod motion;
+pub mod event_stream;
 mod player;
 mod position;
 mod renderable;
@@ -41,14 +40,6 @@ pub struct LeftMover {}
 #[derive(Component, Debug)]
 #[storage(VecStorage)]
 pub struct Player {}
-
-pub use motion::Motions;
-
-#[derive(Component, Debug)]
-#[storage(VecStorage)]
-pub struct Motion {
-    pub motions: Vec<Motions>,
-}
 
 // #[derive(Component, Debug)]
 // #[storage(VecStorage)]

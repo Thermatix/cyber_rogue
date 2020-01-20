@@ -57,19 +57,31 @@ impl State {
 
     // TODO: figure out way to uniquely identify player
     fn player_input(&mut self, ctx: &mut Rltk) {
-        use entity::Motions::*;
-
         let mut players = self.ecs.write_storage::<entity::Player>();
-        let mut moves = self.ecs.write_storage::<entity::Motion>();
-        for (player, motion) in (&mut players, &mut moves).join() {
+        let mut events = self.ecs.write_storage::<entity::EventStream>();
+        for (player, event) in (&mut players, &mut events).join() {
             match ctx.key {
                 None => {}
                 Some(key) => match key {
-                    VirtualKeyCode::Up => motion.motions.push(Up(1)),
-                    VirtualKeyCode::Left => motion.motions.push(Left(1)),
-                    VirtualKeyCode::Down => motion.motions.push(Down(1)),
-                    VirtualKeyCode::Right => motion.motions.push(Right(1)),
-                    _ => {}
+                    VirtualKeyCode::Up => {
+                        println!("Pressed: {}", "up");
+                        event.add_to_channel("motions", ("u", 1))
+                    }
+                    VirtualKeyCode::Left => {
+                        println!("Pressed: {}", "left");
+                        event.add_to_channel("motions", ("l", 1))
+                    }
+                    VirtualKeyCode::Down => {
+                        println!("Pressed: {}", "down");
+                        event.add_to_channel("motions", ("d", 1))
+                    }
+                    VirtualKeyCode::Right => {
+                        println!("Pressed: {}", "right");
+                        event.add_to_channel("motions", ("r", 1))
+                    }
+                    _ => {
+                        println!("KeyPresed: {:?}", key);
+                    }
                 },
             }
         }
