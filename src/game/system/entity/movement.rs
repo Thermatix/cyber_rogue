@@ -18,12 +18,11 @@ impl<'a> System<'a> for Movement {
         let tile_set = &tile_list.find(&map.tileset);
         for (event_stream, mut pos) in (&mut events, &mut pos).join() {
             match event_stream.get_channel("motions") {
-                Some(mut motions) => {
-                    let mut error = "".to_owned();
+                Some(motions) => {
                     for motion in motions.drain(0..) {
                         let amount: i32 = motion.value.into();
                         let (x, y) = {
-                            if motion.message == "l" || motion.message == "r" {
+                            if motion.message == "x" {
                                 (pos.x + amount, pos.y)
                             } else {
                                 (pos.x, pos.y + amount)
@@ -37,9 +36,6 @@ impl<'a> System<'a> for Movement {
                             pos.y = y
                         }
                     }
-                    if &error != "" {
-                        event_stream.add_to_channel("errors", ("Not a valid movement type", error));
-                    };
                 }
                 None => (),
             };

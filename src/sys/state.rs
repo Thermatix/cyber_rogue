@@ -26,10 +26,7 @@ impl State {
         self.ecs.maintain();
     }
 
-    // TODO: move to own system
-    fn render_entities(&mut self, map: &element::Map, ts: &element::TileSet, ctx: &mut Rltk) {}
-
-    fn render_map(&mut self, map_name: &str, mut ctx: &mut Rltk) {
+    fn render_map(&mut self, map_name: &str, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
         let tile_list = &self.ecs.fetch::<element::TileSetList>();
         let positions = &self.ecs.read_storage::<entity::Position>();
@@ -50,9 +47,6 @@ impl State {
             }
         }
 
-        let positions = &self.ecs.read_storage::<entity::Position>();
-        let renderables = &self.ecs.read_storage::<entity::Renderable>();
-
         for (pos, render) in (positions, renderables).join() {
             let tile = &tile_set.find(&map.tiles[map.xy_idx(pos.x as usize, pos.y as usize)]);
             ctx.set(pos.x, pos.y, render.fg, tile.visual.bg, *render.g());
@@ -63,25 +57,25 @@ impl State {
     fn player_input(&mut self, ctx: &mut Rltk) {
         let mut players = self.ecs.write_storage::<entity::Player>();
         let mut events = self.ecs.write_storage::<entity::EventStream>();
-        for (player, event) in (&mut players, &mut events).join() {
+        for (_player, event) in (&mut players, &mut events).join() {
             match ctx.key {
                 None => {}
                 Some(key) => match key {
                     VirtualKeyCode::Up => {
                         println!("Pressed: {}", "up");
-                        event.add_to_channel("motions", ("u", -1))
+                        event.add_to_channel("motions", ("y", -1))
                     }
                     VirtualKeyCode::Left => {
                         println!("Pressed: {}", "left");
-                        event.add_to_channel("motions", ("l", -1))
+                        event.add_to_channel("motions", ("x", -1))
                     }
                     VirtualKeyCode::Down => {
                         println!("Pressed: {}", "down");
-                        event.add_to_channel("motions", ("d", 1))
+                        event.add_to_channel("motions", ("y", 1))
                     }
                     VirtualKeyCode::Right => {
                         println!("Pressed: {}", "right");
-                        event.add_to_channel("motions", ("r", 1))
+                        event.add_to_channel("motions", ("x", 1))
                     }
                     _ => {
                         println!("KeyPresed: {:?}", key);

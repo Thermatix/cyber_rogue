@@ -10,9 +10,9 @@ impl<'a> System<'a> for LeftWalker {
     fn run(&mut self, (lefty, positions, mut events): Self::SystemData) {
         for (_lefty, pos, events) in (&lefty, &positions, &mut events).join() {
             if pos.x == 0 {
-                events.add_to_channel("motions", ("r", 79));
+                events.add_to_channel("motions", ("x", 79));
             } else {
-                events.add_to_channel("motions", ("l", -1));
+                events.add_to_channel("motions", ("x", -1));
             }
         }
     }
