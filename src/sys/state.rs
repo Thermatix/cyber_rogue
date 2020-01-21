@@ -1,9 +1,11 @@
-use crate::game::entity;
 use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
 
-use crate::game::entity::*;
+// Game should not be here really
+use crate::game::entity;
+// use crate::game::entity::*;
 use crate::game::system::*;
+use crate::sys::element;
 
 pub struct State {
     pub ecs: World,
@@ -18,36 +20,72 @@ impl State {
     // TODO: dynamically load and execute system
     fn run_systems(&mut self) {
         let mut lw = LeftWalker::new();
-        let mut pw = PlayerMovement::new();
+        let mut pw = Movement::new();
         lw.run_now(&self.ecs);
         pw.run_now(&self.ecs);
         self.ecs.maintain();
     }
 
     // TODO: move to own system
-    fn render_entities(&mut self, ctx: &mut Rltk) {
-        let positions = self.ecs.read_storage::<Position>();
-        let renderables = self.ecs.read_storage::<Renderable>();
+    fn render_entities(&mut self, map: &element::Map, ts: &element::TileSet, ctx: &mut Rltk) {}
 
-        for (pos, render) in (&positions, &renderables).join() {
-            ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
+    fn render_map(&mut self, map_name: &str, mut ctx: &mut Rltk) {
+        let map_list = &self.ecs.fetch::<element::MapList>();
+        let tile_list = &self.ecs.fetch::<element::TileSetList>();
+        let positions = &self.ecs.read_storage::<entity::Position>();
+        let renderables = &self.ecs.read_storage::<entity::Renderable>();
+
+        let map = map_list.find(map_name);
+        let tile_set = tile_list.find(&map.tileset);
+        let mut y = 0;
+        let mut x = 0;
+
+        for tn in &map.tiles {
+            let tile = &tile_set.find(tn);
+            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+            x += 1;
+            if x > map.x as i32 {
+                y += 1;
+                x = 0;
+            }
+        }
+
+        let positions = &self.ecs.read_storage::<entity::Position>();
+        let renderables = &self.ecs.read_storage::<entity::Renderable>();
+
+        for (pos, render) in (positions, renderables).join() {
+            let tile = &tile_set.find(&map.tiles[map.xy_idx(pos.x as usize, pos.y as usize)]);
+            ctx.set(pos.x, pos.y, render.fg, tile.visual.bg, *render.g());
         }
     }
 
     // TODO: figure out way to uniquely identify player
     fn player_input(&mut self, ctx: &mut Rltk) {
-        use player::Movements::*;
-
-        let mut players = self.ecs.write_storage::<Player>();
-        for player in (&mut players).join() {
+        let mut players = self.ecs.write_storage::<entity::Player>();
+        let mut events = self.ecs.write_storage::<entity::EventStream>();
+        for (player, event) in (&mut players, &mut events).join() {
             match ctx.key {
                 None => {}
                 Some(key) => match key {
-                    VirtualKeyCode::Up => player.movements.push(Up(1)),
-                    VirtualKeyCode::Left => player.movements.push(Left(1)),
-                    VirtualKeyCode::Down => player.movements.push(Down(1)),
-                    VirtualKeyCode::Right => player.movements.push(Right(1)),
-                    _ => {}
+                    VirtualKeyCode::Up => {
+                        println!("Pressed: {}", "up");
+                        event.add_to_channel("motions", ("u", -1))
+                    }
+                    VirtualKeyCode::Left => {
+                        println!("Pressed: {}", "left");
+                        event.add_to_channel("motions", ("l", -1))
+                    }
+                    VirtualKeyCode::Down => {
+                        println!("Pressed: {}", "down");
+                        event.add_to_channel("motions", ("d", 1))
+                    }
+                    VirtualKeyCode::Right => {
+                        println!("Pressed: {}", "right");
+                        event.add_to_channel("motions", ("r", 1))
+                    }
+                    _ => {
+                        println!("KeyPresed: {:?}", key);
+                    }
                 },
             }
         }
@@ -60,7 +98,7 @@ impl GameState for State {
 
         self.run_systems();
         self.player_input(ctx);
-
-        self.render_entities(ctx);
+        self.render_map("Test Map", ctx);
+        // self.render_entities(ctx);
     }
 }
