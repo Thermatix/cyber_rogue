@@ -21,6 +21,7 @@ impl Renderable {
         }
     }
 
+    // use v:Into<Option<usize>> for dynamic typing of input value
     pub fn g(&self) -> &u8 {
         match &self.kind {
             GlyphType::Static => &self.glyph[self.g_id],

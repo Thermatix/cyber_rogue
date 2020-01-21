@@ -13,7 +13,7 @@ impl TileSet {
     }
 
     pub fn insert_tile(&mut self, tile: Tile) {
-        self.list.insert(&tile.name, tile);
+        self.list.insert(tile.name.clone(), tile);
     }
 
     // Todo: load tile data from data files
@@ -21,13 +21,13 @@ impl TileSet {
         use GlyphType::*;
         self.insert_tile(Tile {
             blocking: true,
-            name: "wall",
+            name: "wall".to_owned(),
             visual: Renderable::new(vec!['▓'], Static, rltk::BROWN4, rltk::GREY),
         });
 
         self.insert_tile(Tile {
-            blocking: true,
-            name: "floor",
+            blocking: false,
+            name: "floor".to_owned(),
             visual: Renderable::new(vec!['░'], Static, rltk::BLACK, rltk::GREY),
         });
     }

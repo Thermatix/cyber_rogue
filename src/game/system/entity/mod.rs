@@ -3,3 +3,6 @@ pub struct LeftWalker {}
 
 pub mod movement;
 pub struct Movement {}
+
+// pub mod vicinity;
+// pub struct Vicinity {}

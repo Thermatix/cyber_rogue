@@ -27,19 +27,15 @@ impl State {
     }
 
     // TODO: move to own system
-    fn render_entities(&mut self, ctx: &mut Rltk) {
-        let positions = self.ecs.read_storage::<entity::Position>();
-        let renderables = self.ecs.read_storage::<entity::Renderable>();
+    fn render_entities(&mut self, map: &element::Map, ts: &element::TileSet, ctx: &mut Rltk) {}
 
-        for (pos, render) in (&positions, &renderables).join() {
-            ctx.set(pos.x, pos.y, render.fg, render.bg, *render.g());
-        }
-    }
-
-    fn render_map(&mut self, map_name: &str, ctx: &mut Rltk) {
+    fn render_map(&mut self, map_name: &str, mut ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
-        let map = map_list.find(map_name);
         let tile_list = &self.ecs.fetch::<element::TileSetList>();
+        let positions = &self.ecs.read_storage::<entity::Position>();
+        let renderables = &self.ecs.read_storage::<entity::Renderable>();
+
+        let map = map_list.find(map_name);
         let tile_set = tile_list.find(&map.tileset);
         let mut y = 0;
         let mut x = 0;
@@ -53,6 +49,14 @@ impl State {
                 x = 0;
             }
         }
+
+        let positions = &self.ecs.read_storage::<entity::Position>();
+        let renderables = &self.ecs.read_storage::<entity::Renderable>();
+
+        for (pos, render) in (positions, renderables).join() {
+            let tile = &tile_set.find(&map.tiles[map.xy_idx(pos.x as usize, pos.y as usize)]);
+            ctx.set(pos.x, pos.y, render.fg, tile.visual.bg, *render.g());
+        }
     }
 
     // TODO: figure out way to uniquely identify player
@@ -65,11 +69,11 @@ impl State {
                 Some(key) => match key {
                     VirtualKeyCode::Up => {
                         println!("Pressed: {}", "up");
-                        event.add_to_channel("motions", ("u", 1))
+                        event.add_to_channel("motions", ("u", -1))
                     }
                     VirtualKeyCode::Left => {
                         println!("Pressed: {}", "left");
-                        event.add_to_channel("motions", ("l", 1))
+                        event.add_to_channel("motions", ("l", -1))
                     }
                     VirtualKeyCode::Down => {
                         println!("Pressed: {}", "down");
@@ -95,6 +99,6 @@ impl GameState for State {
         self.run_systems();
         self.player_input(ctx);
         self.render_map("Test Map", ctx);
-        self.render_entities(ctx);
+        // self.render_entities(ctx);
     }
 }

@@ -5,7 +5,7 @@ use specs_derive::*;
 use std::cmp::{max, min};
 use std::collections::HashMap;
 
-use crate::sys::element::Map;
+use crate::sys::element::{Map, Tile, TileSet};
 
 // pub use event_stream::Stream;
 // mod event_stream;
@@ -14,6 +14,7 @@ pub mod event_stream;
 mod player;
 mod position;
 mod renderable;
+mod sense_of_touch;
 
 #[derive(Component)]
 #[storage(VecStorage)]
@@ -47,6 +48,12 @@ pub struct Player {}
 //     pub stack: Vec<String>,
 //     pub pointer: &'l Map<'l>,
 // }
+
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct SenseOfTouch {
+    pub vicinity: Vec<String>,
+}
 
 #[derive(Component, Debug)]
 #[storage(VecStorage)]

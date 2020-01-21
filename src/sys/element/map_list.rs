@@ -1,17 +1,17 @@
 use super::{HashMap, Map, MapList};
 
-impl<'ml> MapList<'ml> {
+impl MapList {
     pub fn new() -> Self {
         Self {
             maps: HashMap::new(),
         }
     }
 
-    pub fn insert(&mut self, map: Map<'ml>) {
-        self.maps.insert(map.name, map);
+    pub fn insert(&mut self, map: Map) {
+        self.maps.insert(map.name.clone(), map);
     }
 
-    pub fn find(&self, name: &'ml str) -> &Map {
+    pub fn find(&self, name: &str) -> &Map {
         &self.maps[name]
     }
 }

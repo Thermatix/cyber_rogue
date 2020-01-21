@@ -14,24 +14,23 @@ mod map_generator;
 
 pub use map_generator::MapGenerator;
 
-#[derive(PartialEq, Debug)]
 pub struct Tile {
     pub blocking: bool,
-    pub name: &'static str,
+    pub name: String,
     pub visual: Renderable,
 }
 
 pub struct TileSet {
-    pub list: HashMap<&'static str, Tile>,
+    pub list: HashMap<String, Tile>,
 }
 
 pub struct TileSetList {
-    pub tilesets: HashMap<&'static str, TileSet>,
+    pub tilesets: HashMap<String, TileSet>,
 }
-pub struct Map<'m> {
-    pub name: &'m str,
-    pub tileset: &'m str,
-    pub tiles: Vec<&'m str>,
+pub struct Map {
+    pub name: String,
+    pub tileset: String,
+    pub tiles: Vec<String>,
     pub blocking: Vec<bool>,
     pub height: usize,
     pub y: usize,
@@ -39,6 +38,7 @@ pub struct Map<'m> {
     pub x: usize,
 }
 
-pub struct MapList<'ml> {
-    pub maps: HashMap<&'ml str, Map<'ml>>,
+#[derive(Default)]
+pub struct MapList {
+    pub maps: HashMap<String, Map>,
 }

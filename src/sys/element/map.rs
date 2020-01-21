@@ -1,17 +1,11 @@
 use super::{Map, MapGenerator, Tile, TileSet};
 
-impl<'m> Map<'m> {
-    pub fn new(
-        name: &'m str,
-        tile_set_name: &'m str,
-        x: usize,
-        y: usize,
-        initial_tile: &'m str,
-    ) -> Self {
+impl Map {
+    pub fn new(name: &str, tile_set_name: &str, x: usize, y: usize, initial_tile: &str) -> Self {
         Self {
-            name: name,
-            tileset: tile_set_name,
-            tiles: vec![initial_tile; x * y],
+            name: name.to_owned(),
+            tileset: tile_set_name.to_owned(),
+            tiles: vec![initial_tile.to_owned(); x * y],
             blocking: vec![false; x * y],
             width: x,
             x: x - 1,
@@ -20,9 +14,9 @@ impl<'m> Map<'m> {
         }
     }
 
-    pub fn insert_tile(&mut self, tile: &'m str, x: usize, y: usize) {
+    pub fn insert_tile(&mut self, tile: &str, x: usize, y: usize) {
         let idx = self.xy_idx(x, y);
-        self.tiles[idx] = tile;
+        self.tiles[idx] = tile.to_owned();
     }
 
     pub fn xy_idx(&self, x: usize, y: usize) -> usize {
