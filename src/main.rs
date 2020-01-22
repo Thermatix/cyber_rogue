@@ -17,17 +17,16 @@ fn main() {
     tile_set_list.insert("Test Tile Set", tile_set);
 
     let mut map_list = sys::element::MapList::new();
-    let mut map = sys::element::Map::new("Test Map", "Test Tile Set", 80, 50, "floor");
-    map.generate(game::generator::MapSimple {});
-    map_list.insert(map);
+    let mut map = sys::element::Map::new("Test Map", "Test Tile Set", 80, 50, "wall");
+    map.generate(game::generator::DungeonBasic {});
+    let player_entrance = &map.entrances.first().unwrap().clone();
 
     game_state.ecs.insert(tile_set_list);
-    game_state.ecs.insert(map_list);
 
-    game_state
+    let player_entity = game_state
         .ecs
         .create_entity()
-        .with(Position::new(40, 25))
+        .with(Position::new(player_entrance.0, player_entrance.1))
         .with(Renderable::new(
             vec!['@'],
             GlyphType::Static,
@@ -37,21 +36,11 @@ fn main() {
         .with(EventStream::new())
         .with(Player::new())
         .build();
+    map.insert_entity(player_entity.id(), player_entrance.0, player_entrance.1);
 
-    for i in 0..10 {
-        game_state
-            .ecs
-            .create_entity()
-            .with(Position::new(i * 7, 20))
-            .with(Renderable::new(
-                vec!['☺'],
-                GlyphType::Static,
-                rltk::RED,
-                rltk::BLACK,
-            ))
-            .with(EventStream::new())
-            .with(LeftMover {})
-            .build();
-    }
+    map_list.insert(map);
+
+    game_state.ecs.insert(map_list);
+
     rltk::main_loop(context, game_state);
 }
