@@ -14,4 +14,7 @@ impl MapList {
     pub fn find(&self, name: &str) -> &Map {
         &self.maps[name]
     }
+    pub fn find_mut(&mut self, name: &str) -> Option<&mut Map> {
+        self.maps.get_mut(name)
+    }
 }

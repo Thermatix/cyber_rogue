@@ -1,5 +1,6 @@
 use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
+use specs::world::EntitiesRes;
 
 // Game should not be here really
 use crate::game::entity;
@@ -17,7 +18,9 @@ impl State {
         entity::register_components(&mut s.ecs);
         s
     }
-    // TODO: dynamically load and execute system
+
+    // TODO: TRANSFORM TO USE a DISPATCHER
+    // https://docs.rs/specs/0.15.1/specs/#system-execution
     fn run_systems(&mut self) {
         let mut lw = LeftWalker::new();
         let mut pw = Movement::new();
@@ -29,8 +32,8 @@ impl State {
     fn render_map(&mut self, map_name: &str, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
         let tile_list = &self.ecs.fetch::<element::TileSetList>();
-        let positions = &self.ecs.read_storage::<entity::Position>();
         let renderables = &self.ecs.read_storage::<entity::Renderable>();
+        let entity_store = &self.ecs.fetch::<EntitiesRes>();
 
         let map = map_list.find(map_name);
         let tile_set = tile_list.find(&map.tileset);
@@ -38,18 +41,18 @@ impl State {
         let mut x = 0;
 
         for tn in &map.tiles {
-            let tile = &tile_set.find(tn);
-            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+            let tile = &tile_set.find(tn.t());
+            if let Some(ent) = tn.entities.last() {
+                let r = renderables.get(entity_store.entity(*ent)).unwrap();
+                ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
+            } else {
+                ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+            }
             x += 1;
             if x > map.x as i32 {
                 y += 1;
                 x = 0;
             }
-        }
-
-        for (pos, render) in (positions, renderables).join() {
-            let tile = &tile_set.find(&map.tiles[map.xy_idx(pos.x as usize, pos.y as usize)]);
-            ctx.set(pos.x, pos.y, render.fg, tile.visual.bg, *render.g());
         }
     }
 

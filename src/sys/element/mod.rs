@@ -30,7 +30,7 @@ pub struct TileSetList {
 pub struct Map {
     pub name: String,
     pub tileset: String,
-    pub tiles: Vec<String>,
+    pub tiles: Vec<map::MapLoc>,
     pub blocking: Vec<bool>,
     pub height: usize,
     pub y: usize,
