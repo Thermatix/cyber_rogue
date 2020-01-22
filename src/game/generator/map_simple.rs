@@ -1,5 +1,6 @@
+use super::element::*;
+
 use super::MapSimple;
-use crate::sys::element::*;
 
 impl MapGenerator for MapSimple {
     fn create_map(&self, map: &mut Map) {

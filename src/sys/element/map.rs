@@ -7,6 +7,7 @@ impl Map {
             name: name.to_owned(),
             tileset: tile_set_name.to_owned(),
             tiles: vec![MapLoc::new(initial_tile.to_owned()); x * y],
+            entrances: Vec::new(),
             blocking: vec![false; x * y],
             width: x,
             x: x - 1,
@@ -17,7 +18,7 @@ impl Map {
 
     pub fn insert_tile(&mut self, tile: &str, x: usize, y: usize) {
         let idx = self.xy_idx(x, y);
-        self.tiles[idx] = MapLoc::new(tile.to_owned());
+        self.tiles[idx].tile = tile.to_owned();
     }
 
     pub fn xy_idx(&self, x: usize, y: usize) -> usize {
@@ -36,6 +37,11 @@ impl Map {
             Err(_) => {}
         }
         self.tiles[new_idx].entities.push(ent);
+    }
+
+    pub fn insert_entity(&mut self, ent: u32, x: i32, y: i32) {
+        let idx = self.xy_idx(x as usize, y as usize);
+        self.tiles[idx].entities.push(ent);
     }
 }
 

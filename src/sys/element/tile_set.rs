@@ -22,13 +22,13 @@ impl TileSet {
         self.insert_tile(Tile {
             blocking: true,
             name: "wall".to_owned(),
-            visual: Renderable::new(vec!['▓'], Static, rltk::BROWN4, rltk::GREY),
+            visual: Renderable::new(vec!['▓'], Static, rltk::GREY10, rltk::GREY30),
         });
 
         self.insert_tile(Tile {
             blocking: false,
             name: "floor".to_owned(),
-            visual: Renderable::new(vec!['░'], Static, rltk::BLACK, rltk::GREY),
+            visual: Renderable::new(vec!['░'], Static, rltk::DARK_BLUE, rltk::BLACK),
         });
     }
 }
