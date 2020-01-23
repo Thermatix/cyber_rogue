@@ -8,5 +8,13 @@ edition = "2018"
 
 [dependencies]
 rltk = "~0.5.17"
+# consider switching to https://crates.io/crates/legion
 specs = "~0.15.1"
 specs-derive = "~0.4.0"
+# legion = "~0.2.1"
+
+# Consider this for storing glyphs and animations
+# https://docs.rs/tinyvec/0.2.0/tinyvec/
+
+# consider this for ecs references
+# https://github.com/fitzgen/generational-arena
