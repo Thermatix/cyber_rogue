@@ -11,10 +11,11 @@ use crate::sys::element::{Map, Tile, TileSet};
 // mod event_stream;
 // mod location;
 pub mod event_stream;
+mod field_of_view;
 mod player;
 mod position;
 mod renderable;
-mod sense_of_touch;
+// mod sense_of_touch;
 
 #[derive(Component)]
 #[storage(VecStorage)]
@@ -25,7 +26,7 @@ pub struct Position {
 
 pub use renderable::GlyphType;
 
-#[derive(Component, PartialEq, Debug)]
+#[derive(Component, PartialEq, Debug, Clone)]
 #[storage(VecStorage)]
 pub struct Renderable {
     pub glyph: Vec<u8>,
@@ -59,4 +60,11 @@ pub struct SenseOfTouch {
 #[storage(VecStorage)]
 pub struct EventStream {
     pub stream: event_stream::Stream,
+}
+
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct FieldOfView {
+    pub visible_tiles: Vec<rltk::Point>,
+    pub range: i32,
 }

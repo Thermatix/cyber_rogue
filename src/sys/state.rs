@@ -1,6 +1,7 @@
 use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
-use specs::world::EntitiesRes;
+use specs::world::{EntitiesRes, EntityBuilder};
+use specs::{Dispatcher, Entity, WorldExt};
 
 // Game should not be here really
 use crate::game::entity;
@@ -10,39 +11,33 @@ use crate::sys::element;
 
 pub struct State {
     pub ecs: World,
+    pub dsp: Dispatcher<'static, 'static>,
 }
 
 impl State {
-    pub fn new() -> Self {
-        let mut s = Self { ecs: World::new() };
-        entity::register_components(&mut s.ecs);
-        s
-    }
-
-    // TODO: TRANSFORM TO USE a DISPATCHER
-    // https://docs.rs/specs/0.15.1/specs/#system-execution
-    fn run_systems(&mut self) {
-        let mut lw = LeftWalker::new();
-        let mut pw = Movement::new();
-        lw.run_now(&self.ecs);
-        pw.run_now(&self.ecs);
-        self.ecs.maintain();
+    pub fn new(
+        build_dispatcher: &dyn Fn() -> Dispatcher<'static, 'static>,
+        register_components: &dyn Fn(World) -> World,
+    ) -> Self {
+        Self {
+            ecs: register_components(World::new()),
+            dsp: build_dispatcher(),
+        }
     }
 
     fn render_map(&mut self, map_name: &str, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
-        let tile_list = &self.ecs.fetch::<element::TileSetList>();
         let renderables = &self.ecs.read_storage::<entity::Renderable>();
         let entity_store = &self.ecs.fetch::<EntitiesRes>();
 
+        // Store and use handler function that returns the map and tile_set
         let map = map_list.find(map_name);
-        let tile_set = tile_list.find(&map.tileset);
         let mut y = 0;
         let mut x = 0;
 
         for tn in &map.tiles {
-            let tile = &tile_set.find(tn.t());
-            if let Some(ent) = tn.entities.last() {
+            let tile = &map.tile_set.find(tn);
+            if let Some(ent) = map.entities[&(x as usize)][&(y as usize)].last() {
                 let r = renderables.get(entity_store.entity(*ent)).unwrap();
                 ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
             } else {
@@ -56,7 +51,33 @@ impl State {
         }
     }
 
-    // TODO: figure out way to uniquely identify player
+    pub fn insert_map<F>(&mut self, tile_set: &str, mut block: F)
+    where
+        F: FnMut(element::TileSet) -> element::Map,
+    {
+        let map_list = &mut self.ecs.fetch_mut::<element::MapList>();
+        let tile_sets = &self.ecs.fetch::<element::TileSetList>();
+        map_list.insert(block(tile_sets.find(tile_set).clone()));
+    }
+
+    pub fn modify_map<F>(&mut self, map_name: &str, mut block: F)
+    where
+        F: FnMut(&mut element::Map),
+    {
+        let mut map_list = self.ecs.fetch_mut::<element::MapList>();
+        match map_list.find_mut(map_name) {
+            Some(mut map) => block(&mut map),
+            None => (),
+        };
+    }
+
+    pub fn insert_entity<F>(&mut self, mut block: F) -> u32
+    where
+        F: FnMut(EntityBuilder) -> EntityBuilder,
+    {
+        block(self.ecs.create_entity()).build().id()
+    }
+
     fn player_input(&mut self, ctx: &mut Rltk) {
         let mut players = self.ecs.write_storage::<entity::Player>();
         let mut events = self.ecs.write_storage::<entity::EventStream>();
@@ -81,7 +102,7 @@ impl State {
                         event.add_to_channel("motions", ("x", 1))
                     }
                     _ => {
-                        println!("KeyPresed: {:?}", key);
+                        println!("KeyPressed: {:?}", key);
                     }
                 },
             }
@@ -93,9 +114,9 @@ impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
 
-        self.run_systems();
         self.player_input(ctx);
+        self.dsp.dispatch(&mut self.ecs);
+        self.ecs.maintain();
         self.render_map("Test Map", ctx);
-        // self.render_entities(ctx);
     }
 }

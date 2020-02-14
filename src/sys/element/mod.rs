@@ -1,4 +1,5 @@
 use crate::game::entity::Renderable;
+use indexmap::IndexMap;
 
 use std::collections::HashMap;
 
@@ -16,30 +17,33 @@ mod map_generator;
 pub use containers::Container;
 pub use map_generator::MapGenerator;
 
+#[derive(Clone)]
 pub struct Tile {
     pub blocking: bool,
     pub name: String,
     pub visual: Renderable,
 }
 
+#[derive(Clone)]
 pub struct TileSet {
-    pub list: HashMap<String, Tile>,
+    pub list: IndexMap<String, Tile>,
 }
 
 pub struct TileSetList {
+    // TODO: change this to tile_sets
     pub tilesets: HashMap<String, TileSet>,
 }
 
 pub struct Map {
     pub name: String,
-    pub tileset: String,
-    pub tiles: Vec<map::MapLoc>,
+    pub tile_set: TileSet,
+    pub tiles: Vec<usize>,
+    pub entities: HashMap<usize, HashMap<usize, Vec<u32>>>,
     pub entrances: Vec<(i32, i32)>,
-    pub blocking: Vec<bool>,
-    pub height: usize,
-    pub y: usize,
     pub width: usize,
     pub x: usize,
+    pub height: usize,
+    pub y: usize,
 }
 
 #[derive(Default)]

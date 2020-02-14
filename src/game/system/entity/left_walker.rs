@@ -1,4 +1,5 @@
 use super::super::*;
+use super::LeftWalker;
 use crate::game::entity::{EventStream, LeftMover, Position};
 
 impl<'a> System<'a> for LeftWalker {

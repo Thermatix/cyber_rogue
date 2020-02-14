@@ -1,6 +1,5 @@
 use super::{Component, EventStream, HashMap, VecStorage};
-use std::convert::From;
-use std::convert::Into;
+use std::convert::{From, Into};
 
 type Events = Vec<Event>;
 pub type Stream = HashMap<String, Events>;

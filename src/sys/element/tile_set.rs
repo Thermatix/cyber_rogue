@@ -1,15 +1,57 @@
-use super::{HashMap, Tile, TileSet};
+use super::{HashMap, IndexMap, Tile, TileSet};
 use crate::game::entity::{GlyphType, Renderable}; //TODO: once file based tilesets are implimented, this line can be removed
+
+use std::convert::{From, Into};
+
+#[derive(PartialEq, Debug)]
+enum FindBy<'f> {
+    U(&'f usize),
+    S(&'f str),
+    ST(&'f String),
+}
+
+impl<'f> From<&'f usize> for FindBy<'f> {
+    fn from(v: &'f usize) -> Self {
+        Self::U(v)
+    }
+}
+
+impl<'f> From<&'f str> for FindBy<'f> {
+    fn from(v: &'f str) -> Self {
+        Self::S(v)
+    }
+}
 
 impl TileSet {
     pub fn new() -> Self {
         Self {
-            list: HashMap::new(),
+            list: IndexMap::new(),
         }
     }
 
-    pub fn find(&self, name: &str) -> &Tile {
-        &self.list[name]
+    pub fn tile_index<'r, K: Into<FindBy<'r>>>(&self, key: K) -> usize {
+        match key.into() {
+            FindBy::S(k) => match self.list.get_full(k) {
+                Some((i, _, _)) => i,
+                _ => todo!(),
+            },
+            FindBy::ST(k) => match self.list.get_full(k as &str) {
+                Some((i, _, _)) => i,
+                _ => todo!(),
+            },
+            _ => todo!(),
+        }
+    }
+
+    pub fn find<'r, 'ts: 'r, K: Into<FindBy<'r>>>(&'ts self, key: K) -> &'r Tile {
+        match key.into() {
+            FindBy::S(k) => &self.list.get(k).unwrap(),
+            FindBy::ST(k) => &self.list.get(k).unwrap(),
+            FindBy::U(k) => match &self.list.get_index(*k) {
+                Some((_, v)) => &v,
+                _ => todo!(),
+            },
+        }
     }
 
     pub fn insert_tile(&mut self, tile: Tile) {

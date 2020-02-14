@@ -5,7 +5,7 @@ use super::DungeonBasic;
 use crate::sys::widgets::map::Rect;
 
 impl MapGenerator for DungeonBasic {
-    fn create_map(&self, mut map: &mut Map) {
+    fn create_map<'m>(&'m self, mut map: &'m mut Map) {
         let mut rooms: Vec<Rect> = Vec::new();
         const MAX_ROOMS: i32 = 30;
         const MIN_SIZE: i32 = 6;
@@ -16,8 +16,8 @@ impl MapGenerator for DungeonBasic {
         for _ in 0..MAX_ROOMS {
             let w = rng.range(MIN_SIZE, MAX_SIZE);
             let h = rng.range(MIN_SIZE, MAX_SIZE);
-            let x = rng.roll_dice(1, map.width as i32 - w - 1) - 1;
-            let y = rng.roll_dice(1, map.height as i32 - w - 1) - 1;
+            let x = rng.roll_dice(1, map.x as i32 - w - 1);
+            let y = rng.roll_dice(1, (map.y) as i32 - w - 2);
             let new_room = Rect::new(x, y, w, h);
             let mut ok = true;
 
