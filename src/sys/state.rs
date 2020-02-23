@@ -60,9 +60,9 @@ impl State {
         map_list.insert(block(tile_sets.find(tile_set).clone()));
     }
 
-    pub fn modify_map<F>(&mut self, map_name: &str, mut block: F)
+    pub fn modify_map<'c, 'm: 'c, F>(&'m mut self, map_name: &'c str, mut block: F)
     where
-        F: FnMut(&mut element::Map),
+        F: FnMut(&'m mut element::Map) + 'c,
     {
         let mut map_list = self.ecs.fetch_mut::<element::MapList>();
         match map_list.find_mut(map_name) {
