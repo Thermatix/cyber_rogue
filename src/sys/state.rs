@@ -37,12 +37,28 @@ impl State {
 
         for tn in &map.tiles {
             let tile = &map.tile_set.find(tn);
-            if let Some(ent) = map.entities[&(x as usize)][&(y as usize)].last() {
-                let r = renderables.get(entity_store.entity(*ent)).unwrap();
-                ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
-            } else {
-                ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
-            }
+            match map.entities.get(&(x as usize)) {
+                Some(row) => {
+                    match row.get(&(y as usize)) {
+                        Some(entities) => match entities.last() {
+                            Some(ent) => {
+                                let r = renderables.get(entity_store.entity(*ent)).unwrap();
+                                ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
+                            }
+                            None => {
+                                ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+                            }
+                        },
+                        None => {
+                            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+                        }
+                    };
+                }
+                None => {
+                    ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+                }
+            };
+
             x += 1;
             if x > map.x as i32 {
                 y += 1;
@@ -60,16 +76,16 @@ impl State {
         map_list.insert(block(tile_sets.find(tile_set).clone()));
     }
 
-    pub fn modify_map<'c, 'm: 'c, F>(&'m mut self, map_name: &'c str, mut block: F)
-    where
-        F: FnMut(&'m mut element::Map) + 'c,
-    {
-        let mut map_list = self.ecs.fetch_mut::<element::MapList>();
-        match map_list.find_mut(map_name) {
-            Some(mut map) => block(&mut map),
-            None => (),
-        };
-    }
+    // pub fn modify_map<'c, 'm: 'c, F>(&'m mut self, map_name: &'c str, mut block: F)
+    // where
+    //     F: FnMut(&'m mut element::Map) + 'c,
+    // {
+    //     let mut map_list = self.ecs.fetch_mut::<element::MapList>();
+    //     match map_list.find_mut(map_name) {
+    //         Some(mut map) => block(&mut map),
+    //         None => (),
+    //     };
+    // }
 
     pub fn insert_entity<F>(&mut self, mut block: F) -> u32
     where

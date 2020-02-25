@@ -27,48 +27,33 @@ fn main() {
             map.generate(&game::generator::DungeonBasic {});
             map
         });
+        let player_entrance = {
+            let map_list = &game_state.ecs.fetch::<sys::element::MapList>();
+            let map = &map_list.find("Test Map");
 
-        // let map_list = &mut game_state.ecs.fetch_mut::<sys::element::MapList>();
-        // let map = &mut map_list.find_mut("Test Map").unwrap();
+            map.entrances.first().unwrap().clone()
+        };
 
-        // let player_entrance = &map.entrances.first().unwrap().clone();
-
-        // let player_entity = game_state.insert_entity(|eb| {
-        //     eb.with(Position::new(player_entrance.0, player_entrance.1))
-        //         .with(Renderable::new(
-        //             vec!['@'],
-        //             GlyphType::Static,
-        //             rltk::YELLOW,
-        //             rltk::BLACK,
-        //         ))
-        //         .with(EventStream::new())
-        //         .with(Player::new())
-        // });
-        // map.insert_entity(
-        //     player_entity,
-        //     player_entrance.0 as usize,
-        //     player_entrance.1 as usize,
-        // );
-        game_state.modify_map("Test Map", |map| {
-            let player_entrance = &map.entrances.first().unwrap().clone();
-
-            let player_entity = game_state.insert_entity(|eb| {
-                eb.with(Position::new(player_entrance.0, player_entrance.1))
-                    .with(Renderable::new(
-                        vec!['@'],
-                        GlyphType::Static,
-                        rltk::YELLOW,
-                        rltk::BLACK,
-                    ))
-                    .with(EventStream::new())
-                    .with(Player::new())
-            });
+        let player_entity = game_state.insert_entity(|eb| {
+            eb.with(Position::new(player_entrance.0, player_entrance.1))
+                .with(Renderable::new(
+                    vec!['@'],
+                    GlyphType::Static,
+                    rltk::YELLOW,
+                    rltk::BLACK,
+                ))
+                .with(EventStream::new())
+                .with(Player::new())
+        });
+        {
+            let map_list = &mut game_state.ecs.fetch_mut::<sys::element::MapList>();
+            let map = &mut map_list.find_mut("Test Map").unwrap();
             map.insert_entity(
                 player_entity,
                 player_entrance.0 as usize,
                 player_entrance.1 as usize,
             );
-        });
+        }
     }
 
     rltk::main_loop(context, game_state);

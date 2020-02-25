@@ -58,12 +58,23 @@ impl Map {
     }
 
     pub fn insert_entity(&mut self, ent: u32, x: usize, y: usize) {
-        self.entities
-            .get_mut(&x)
-            .unwrap()
-            .get_mut(&y)
-            .unwrap()
-            .push(ent);
+        let row = match self.entities.get_mut(&x) {
+            Some(row) => row,
+            None => {
+                self.entities.insert(x, HashMap::new());
+                self.entities.get_mut(&x).unwrap()
+            }
+        };
+
+        let entities = match row.get_mut(&y) {
+            Some(row) => row,
+            None => {
+                row.insert(y, Vec::new());
+                row.get_mut(&y).unwrap()
+            }
+        };
+
+        entities.push(ent);
     }
 
     pub fn within_map(&self, x: usize, y: usize) -> bool {
