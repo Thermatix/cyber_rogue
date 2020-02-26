@@ -43,6 +43,9 @@ impl Map {
         match oe.binary_search(&ent) {
             Ok(removal_index) => {
                 oe.remove(removal_index);
+                if oe.is_empty() {
+                    self.entities.remove(&ox);
+                }
             }
             Err(_) => {}
         }
