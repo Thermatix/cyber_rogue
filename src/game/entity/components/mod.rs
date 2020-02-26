@@ -11,6 +11,7 @@ use crate::sys::element::{Map, Tile, TileSet};
 // mod event_stream;
 // mod location;
 pub mod event_stream;
+mod event_value;
 mod field_of_view;
 mod player;
 mod position;
@@ -55,6 +56,9 @@ pub struct Player {}
 pub struct SenseOfTouch {
     pub vicinity: Vec<String>,
 }
+
+pub use event_stream::Event;
+pub use event_value::EventValue;
 
 #[derive(Component, Debug)]
 #[storage(VecStorage)]

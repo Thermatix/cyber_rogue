@@ -1,7 +1,7 @@
 use super::super::*;
 
 use super::Movement;
-use crate::game::entity::{components::event_stream::EventValue, EventStream, Position};
+use crate::game::entity::{components::EventValue, EventStream, Position};
 use crate::sys::element::{MapList, TileSetList};
 use specs::world::EntitiesRes;
 
