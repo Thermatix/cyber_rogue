@@ -28,8 +28,8 @@ impl State {
     fn render_map(&mut self, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
         let renderables = &self.ecs.read_storage::<entity::Renderable>();
-        let fovs = &self.ecs.write_storage::<entity::FieldOfView>();
         let locations = &self.ecs.read_storage::<entity::Location>();
+        let revealed_tiles = &self.ecs.read_storage::<entity::RevealedTiles>();
         let player = &self.ecs.read_storage::<entity::Player>();
         let entity_store = &self.ecs.fetch::<EntitiesRes>();
 
@@ -37,12 +37,12 @@ impl State {
         let mut y = 0;
         let mut x = 0;
 
-        for (_, loc, fov) in (player, locations, fovs).join() {
+        for (_, loc, tiles) in (player, locations, revealed_tiles).join() {
             let map = map_list.find(loc.current());
-            for tn in &map.tiles {
-                let pt = rltk::Point::new(x, y);
+            let rts = &tiles.revealed[&map.name];
+            for (idx, tn) in map.tiles.iter().enumerate() {
                 let tile = &map.tile_set.find(tn);
-                if fov.visible_tiles.contains(&pt) {
+                if rts[idx] {
                     match map.entities.get(&(x as usize)) {
                         Some(row) => {
                             match row.get(&(y as usize)) {

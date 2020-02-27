@@ -13,6 +13,7 @@ where
     world.register::<LeftMover>();
     world.register::<Location>();
     world.register::<Player>();
+    world.register::<RevealedTiles>();
     world.register::<EventStream>();
     world.register::<FieldOfView>();
     world

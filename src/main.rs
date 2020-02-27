@@ -47,6 +47,7 @@ fn main() {
                 .with(EventStream::new())
                 .with(Player::new())
                 .with(FieldOfView::new(6))
+                .with(RevealedTiles::new())
         });
         {
             let map_list = &mut game_state.ecs.fetch_mut::<sys::element::MapList>();

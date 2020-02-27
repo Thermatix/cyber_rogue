@@ -14,6 +14,7 @@ mod location;
 mod player;
 mod position;
 mod renderable;
+mod revealed_tiles;
 // mod sense_of_touch;
 
 #[derive(Component, PartialEq, Debug)]
@@ -68,4 +69,10 @@ pub struct EventStream {
 pub struct FieldOfView {
     pub visible_tiles: Vec<rltk::Point>,
     pub range: i32,
+}
+
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct RevealedTiles {
+    pub revealed: HashMap<String, Vec<bool>>,
 }
