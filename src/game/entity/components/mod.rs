@@ -69,6 +69,7 @@ pub struct EventStream {
 pub struct FieldOfView {
     pub visible_tiles: Vec<rltk::Point>,
     pub range: i32,
+    pub dirty: bool,
 }
 
 #[derive(Component, Debug)]

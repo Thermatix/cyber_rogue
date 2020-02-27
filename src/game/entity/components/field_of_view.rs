@@ -7,6 +7,7 @@ impl FieldOfView {
         Self {
             visible_tiles: Vec::new(),
             range: range,
+            dirty: true,
         }
     }
 }
