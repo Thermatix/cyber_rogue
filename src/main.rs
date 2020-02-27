@@ -46,6 +46,7 @@ fn main() {
                 .with(Location::new("Test Map"))
                 .with(EventStream::new())
                 .with(Player::new())
+                .with(FieldOfView::new(6))
         });
         {
             let map_list = &mut game_state.ecs.fetch_mut::<sys::element::MapList>();

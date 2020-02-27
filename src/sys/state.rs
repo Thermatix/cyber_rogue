@@ -28,6 +28,7 @@ impl State {
     fn render_map(&mut self, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
         let renderables = &self.ecs.read_storage::<entity::Renderable>();
+        let fovs = &self.ecs.write_storage::<entity::FieldOfView>();
         let locations = &self.ecs.read_storage::<entity::Location>();
         let player = &self.ecs.read_storage::<entity::Player>();
         let entity_store = &self.ecs.fetch::<EntitiesRes>();
@@ -36,32 +37,40 @@ impl State {
         let mut y = 0;
         let mut x = 0;
 
-        for (_, loc) in (player, locations).join() {
+        for (_, loc, fov) in (player, locations, fovs).join() {
             let map = map_list.find(loc.current());
             for tn in &map.tiles {
+                let pt = rltk::Point::new(x, y);
                 let tile = &map.tile_set.find(tn);
-                match map.entities.get(&(x as usize)) {
-                    Some(row) => {
-                        match row.get(&(y as usize)) {
-                            Some(entities) => match entities.last() {
-                                Some(ent) => {
-                                    let r = renderables.get(entity_store.entity(*ent)).unwrap();
-                                    ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
-                                }
+                if fov.visible_tiles.contains(&pt) {
+                    match map.entities.get(&(x as usize)) {
+                        Some(row) => {
+                            match row.get(&(y as usize)) {
+                                Some(entities) => match entities.last() {
+                                    Some(ent) => {
+                                        let r = renderables.get(entity_store.entity(*ent)).unwrap();
+                                        ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
+                                    }
+                                    None => {
+                                        ctx.set(
+                                            x,
+                                            y,
+                                            tile.visual.fg,
+                                            tile.visual.bg,
+                                            *tile.visual.g(),
+                                        );
+                                    }
+                                },
                                 None => {
                                     ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
                                 }
-                            },
-                            None => {
-                                ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
-                            }
-                        };
-                    }
-                    None => {
-                        ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
-                    }
-                };
-
+                            };
+                        }
+                        None => {
+                            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+                        }
+                    };
+                }
                 x += 1;
                 if x > map.x as i32 {
                     y += 1;
