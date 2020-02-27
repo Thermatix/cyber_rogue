@@ -1,26 +1,8 @@
 use super::{HashMap, IndexMap, Tile, TileSet};
-use crate::game::entity::{GlyphType, Renderable}; //TODO: once file based tilesets are implimented, this line can be removed
+use crate::game::entity::{GlyphType, Renderable};
+use crate::sys::utils::FindBy; //TODO: once file based tilesets are implimented, this line can be removed
 
 use std::convert::{From, Into};
-
-#[derive(PartialEq, Debug)]
-enum FindBy<'f> {
-    U(&'f usize),
-    S(&'f str),
-    ST(&'f String),
-}
-
-impl<'f> From<&'f usize> for FindBy<'f> {
-    fn from(v: &'f usize) -> Self {
-        Self::U(v)
-    }
-}
-
-impl<'f> From<&'f str> for FindBy<'f> {
-    fn from(v: &'f str) -> Self {
-        Self::S(v)
-    }
-}
 
 impl TileSet {
     pub fn new() -> Self {
@@ -39,7 +21,7 @@ impl TileSet {
                 Some((i, _, _)) => i,
                 _ => todo!(),
             },
-            _ => todo!(),
+            _ => panic!("expected String or &str, was usize"),
         }
     }
 

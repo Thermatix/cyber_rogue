@@ -42,6 +42,7 @@ fn main() {
                     rltk::YELLOW,
                     rltk::BLACK,
                 ))
+                .with(Location::new("Test Map"))
                 .with(EventStream::new())
                 .with(Player::new())
         });

@@ -11,6 +11,7 @@ where
     world.register::<Position>();
     world.register::<Renderable>();
     world.register::<LeftMover>();
+    world.register::<Location>();
     world.register::<Player>();
     world.register::<EventStream>();
     world.register::<FieldOfView>();

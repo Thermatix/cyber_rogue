@@ -7,12 +7,10 @@ use std::collections::HashMap;
 
 use crate::sys::element::{Map, Tile, TileSet};
 
-// pub use event_stream::Stream;
-// mod event_stream;
-// mod location;
 pub mod event_stream;
 mod event_value;
 mod field_of_view;
+mod location;
 mod player;
 mod position;
 mod renderable;
@@ -44,12 +42,11 @@ pub struct LeftMover {}
 #[storage(VecStorage)]
 pub struct Player {}
 
-// #[derive(Component, Debug)]
-// #[storage(VecStorage)]
-// pub struct Location<'l> {
-//     pub stack: Vec<String>,
-//     pub pointer: &'l Map<'l>,
-// }
+#[derive(Component, Debug)]
+#[storage(VecStorage)]
+pub struct Location {
+    pub stack: Vec<String>,
+}
 
 #[derive(Component, Debug)]
 #[storage(VecStorage)]

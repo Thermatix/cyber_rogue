@@ -48,7 +48,7 @@ impl Map {
                 }
             }
             Err(_) => {}
-        }
+        };
         self.insert_entity(ent, nx, ny);
     }
 
