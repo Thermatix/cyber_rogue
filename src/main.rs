@@ -21,6 +21,7 @@ fn main() {
 
         game_state.ecs.insert(tile_set_list);
         game_state.ecs.insert(sys::element::MapList::new());
+        game_state.ecs.insert(game::entity::EventStream::new());
 
         game_state.insert_map("Test Tile Set", |tile_set| {
             let mut map = sys::element::Map::new("Test Map", tile_set, 80, 50, "wall");

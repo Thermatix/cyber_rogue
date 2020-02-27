@@ -19,14 +19,8 @@ impl<'a> System<'a> for Movement {
                 match event_stream.get_channel("motions") {
                     Some(motions) => {
                         for motion in motions.drain(0..) {
-                            let amount: i32 = motion.value.into();
-                            let (x, y) = {
-                                if motion.message == "x" {
-                                    (pos.x + amount, pos.y)
-                                } else {
-                                    (pos.x, pos.y + amount)
-                                }
-                            };
+                            let point: (i32, i32) = motion.value.into();
+                            let (x, y) = pos.add(point);
 
                             let idx = map.xy_idx(x as usize, y as usize);
 

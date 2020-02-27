@@ -99,34 +99,33 @@ impl State {
     }
 
     fn player_input(&mut self, ctx: &mut Rltk) {
-        let mut players = self.ecs.write_storage::<entity::Player>();
-        let mut events = self.ecs.write_storage::<entity::EventStream>();
-        for (_player, event) in (&mut players, &mut events).join() {
-            match ctx.key {
-                None => {}
-                Some(key) => match key {
-                    VirtualKeyCode::Up => {
-                        println!("Pressed: {}", "up");
-                        event.add_to_channel("motions", ("y", -1))
-                    }
-                    VirtualKeyCode::Left => {
-                        println!("Pressed: {}", "left");
-                        event.add_to_channel("motions", ("x", -1))
-                    }
-                    VirtualKeyCode::Down => {
-                        println!("Pressed: {}", "down");
-                        event.add_to_channel("motions", ("y", 1))
-                    }
-                    VirtualKeyCode::Right => {
-                        println!("Pressed: {}", "right");
-                        event.add_to_channel("motions", ("x", 1))
-                    }
-                    _ => {
-                        println!("KeyPressed: {:?}", key);
-                    }
-                },
-            }
-        }
+        let mut events = self.ecs.fetch_mut::<entity::EventStream>();
+        // THIS SHOULD OUTPUT TO INPUT CHANNEL AND LET SYSTEMS LOOKING
+        // FOR CERTAIN INPUTS PULL THEM OFF AND DO SOMETHING WITH THEM
+        match ctx.key {
+            None => {}
+            Some(key) => match key {
+                VirtualKeyCode::Up => {
+                    println!("Pressed: {}", "up");
+                    events.add_to_channel("key_press", ("u", 0))
+                }
+                VirtualKeyCode::Left => {
+                    println!("Pressed: {}", "left");
+                    events.add_to_channel("key_press", ("l", 1))
+                }
+                VirtualKeyCode::Down => {
+                    println!("Pressed: {}", "down");
+                    events.add_to_channel("key_press", ("d", 2))
+                }
+                VirtualKeyCode::Right => {
+                    println!("Pressed: {}", "right");
+                    events.add_to_channel("key_press", ("r", 3))
+                }
+                _ => {
+                    println!("KeyPressed: {:?}", key);
+                }
+            },
+        };
     }
 }
 

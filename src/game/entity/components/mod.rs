@@ -16,7 +16,7 @@ mod position;
 mod renderable;
 // mod sense_of_touch;
 
-#[derive(Component)]
+#[derive(Component, PartialEq, Debug)]
 #[storage(VecStorage)]
 pub struct Position {
     pub x: i32,
