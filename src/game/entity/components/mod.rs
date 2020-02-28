@@ -76,4 +76,5 @@ pub struct FieldOfView {
 #[storage(VecStorage)]
 pub struct RevealedTiles {
     pub revealed: HashMap<String, Vec<bool>>,
+    pub visible: HashMap<String, Vec<bool>>,
 }

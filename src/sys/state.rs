@@ -40,37 +40,31 @@ impl State {
         for (_, loc, tiles) in (player, locations, revealed_tiles).join() {
             let map = map_list.find(loc.current());
             let rts = &tiles.revealed[&map.name];
+            let vts = &tiles.visible[&map.name];
             for (idx, tn) in map.tiles.iter().enumerate() {
-                let tile = &map.tile_set.find(tn);
                 if rts[idx] {
-                    match map.entities.get(&(x as usize)) {
-                        Some(row) => {
-                            match row.get(&(y as usize)) {
-                                Some(entities) => match entities.last() {
-                                    Some(ent) => {
-                                        let r = renderables.get(entity_store.entity(*ent)).unwrap();
-                                        ctx.set(x, y, r.fg, tile.visual.bg, *r.g());
-                                    }
-                                    None => {
-                                        ctx.set(
-                                            x,
-                                            y,
-                                            tile.visual.fg,
-                                            tile.visual.bg,
-                                            *tile.visual.g(),
-                                        );
-                                    }
-                                },
-                                None => {
-                                    ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
+                    let tile = &map.tile_set.find(tn);
+                    let (mut fg, mut bg, g) = match map.entities.get(&(x as usize)) {
+                        Some(row) => match row.get(&(y as usize)) {
+                            Some(entities) => match entities.last() {
+                                Some(ent) => {
+                                    let r = renderables.get(entity_store.entity(*ent)).unwrap();
+                                    (r.fg, tile.visual.bg, r.g())
                                 }
-                            };
-                        }
-                        None => {
-                            ctx.set(x, y, tile.visual.fg, tile.visual.bg, *tile.visual.g());
-                        }
+                                None => (tile.visual.fg, tile.visual.bg, tile.visual.g()),
+                            },
+                            None => (tile.visual.fg, tile.visual.bg, tile.visual.g()),
+                        },
+                        None => (tile.visual.fg, tile.visual.bg, tile.visual.g()),
                     };
+
+                    if !vts[idx] {
+                        fg = rltk::RGB::named(rltk::GRAY10);
+                        bg = rltk::RGB::named(rltk::GRAY0);
+                    };
+                    ctx.set(x, y, fg, bg, *g);
                 }
+
                 x += 1;
                 if x > map.x as i32 {
                     y += 1;
