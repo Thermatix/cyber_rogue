@@ -3,7 +3,7 @@ use rltk::RGB;
 
 type Colour = (u8, u8, u8);
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum GlyphType {
     Static,
     Random,

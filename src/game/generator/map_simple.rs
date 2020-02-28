@@ -3,7 +3,7 @@ use super::element::*;
 use super::MapSimple;
 
 impl MapGenerator for MapSimple {
-    fn create_map(&self, map: &mut Map) {
+    fn create_map<'m>(&'m self, map: &'m mut Map) {
         for x in 0..map.width {
             map.insert_tile("wall", x, 0);
             map.insert_tile("wall", x, map.y);

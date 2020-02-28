@@ -1,17 +1,21 @@
 use super::Location;
 
 impl Location {
-    pub fn new() -> Self {
-        Self {
-            pointer: Vec::new(),
-        }
+    pub fn new(initial: &str) -> Self {
+        let mut l = Self { stack: Vec::new() };
+        l.stack.push(initial.to_owned());
+        l
     }
 
     pub fn travel(&mut self, loc: String) {
-        self.pointer.push(loc);
+        self.stack.push(loc);
     }
 
     pub fn leave(&mut self) -> Option<String> {
-        self.pointer.pop()
+        self.stack.pop()
+    }
+
+    pub fn current(&self) -> &String {
+        self.stack.last().unwrap()
     }
 }
