@@ -46,7 +46,7 @@ fn main() {
                 .with(Location::new("Test Map"))
                 .with(EventStream::new())
                 .with(Player::new())
-                .with(FieldOfView::new(6))
+                .with(FieldOfView::new(10))
                 .with(RevealedTiles::new())
         });
         {
