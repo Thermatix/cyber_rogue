@@ -13,6 +13,7 @@ specs = "~0.15.1"
 specs-derive = "~0.4.0"
 indexmap = "~1.3.1" # For tiles
 tinyvec = "~0.3.1" # for entity lists and glyph lists
+mrusty = "1.0.0" # for scripting
 
 # consider this for ecs references
 # https://github.com/fitzgen/generational-arena
