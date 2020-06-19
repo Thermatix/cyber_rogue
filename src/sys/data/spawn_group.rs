@@ -1,4 +1,4 @@
-use super::SpawnGroup;
+use super::{Spawn, SpawnGroup};
 use specs::prelude::World;
 
 pub type ConditionsToSpawn = Vec<Conditions>;
@@ -9,12 +9,6 @@ pub type SpawnList = Vec<ToSpawn>;
 #[derive(Debug, PartialEq)]
 pub enum Conditions {
     None,
-}
-
-pub struct Spawn {
-    pub name: String,
-    pub to_spawn: i32,
-    pub conditions: ConditionsToSpawn,
 }
 
 impl Spawn {
