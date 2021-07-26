@@ -1,3 +1,4 @@
+//! A component for storing the glyph for a renderable entity
 use super::Renderable;
 use rltk::RGB;
 
@@ -11,6 +12,7 @@ pub enum GlyphType {
 }
 
 impl Renderable {
+    /// Returns a new Renderable component
     pub fn new(glyphs: Vec<char>, kind: GlyphType, fg: Colour, bg: Colour) -> Self {
         Self {
             g_id: Renderable::set_g_id(&kind, glyphs.len()),
@@ -22,6 +24,7 @@ impl Renderable {
     }
 
     // use v:Into<Option<usize>> for dynamic typing of input value
+    /// Returns the current &u8 representation of the glyph
     pub fn g(&self) -> &u8 {
         match &self.kind {
             GlyphType::Static => &self.glyph[self.g_id],
@@ -35,6 +38,7 @@ impl Renderable {
         glyphs.iter().map(|glyph| rltk::to_cp437(*glyph)).collect()
     }
 
+    /// I don't recall what this does >_<, fuck you past me
     fn set_g_id(kind: &GlyphType, glyph_count: usize) -> usize {
         match kind {
             GlyphType::Static => 0 as usize,

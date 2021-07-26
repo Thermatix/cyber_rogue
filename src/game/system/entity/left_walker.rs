@@ -1,3 +1,4 @@
+//! This is an example system that simply moves an entity westward
 use super::super::*;
 use super::LeftWalker;
 use crate::game::entity::{EventStream, LeftMover, Position};

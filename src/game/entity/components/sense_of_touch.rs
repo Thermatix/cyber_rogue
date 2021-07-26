@@ -1,3 +1,4 @@
+//! Represents an entities sense of touch
 use super::{SenseOfTouch, Tile, TileSet};
 
 impl SenseOfTouch {

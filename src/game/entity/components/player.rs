@@ -1,3 +1,4 @@
+/// Represents the player entity 
 use super::Player;
 
 impl Player {

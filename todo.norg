@@ -1,4 +1,4 @@
-[ ] Add docstrings to all modules
+[x] Add docstrings to all modules
   [x] sys:
     [e] entity_manager
     [x] state
@@ -14,28 +14,28 @@
       [x] find_by
       [x] widgets/map
         [x] rect
-  [ ] game:
-    [ ] entity/components
-      [ ] event_stream
-      [ ] event_value
-      [ ] field_of_view
-      [ ] location
-      [ ] position
-      [ ] renderable
-      [ ] player
-      [ ] revealed_tiles
-      [ ] sense_of_touch
-    [ ] generator
-      [ ] dungeon_basic
-      [ ] map_simple
-    [ ] system
-      [ ] entity
-        [ ] movement
-        [ ] vicinity
-        [ ] visiblity
-        [ ] left_walker
-      [ ] player
-        [ ] movement
+  [x] game:
+    [x] entity/components
+      [x] event_stream
+      [x] event_value
+      [x] field_of_view
+      [x] location
+      [?] position
+      [x] renderable
+      [x] player
+      [x] revealed_tiles
+      [x] sense_of_touch
+    [x] generator
+      [x] dungeon_basic
+      [x] map_simple
+    [x] system
+      [x] entity
+        [x] movement
+        [x] vicinity
+        [x] visiblity
+        [x] left_walker
+      [x] player
+        [x] movement
 [ ] Rebuild event queue to be more like a queue
 [ ] Rebuild input to use command pattern (command struct)
 [ ] Change movement to use direction + moment (so there is direction)

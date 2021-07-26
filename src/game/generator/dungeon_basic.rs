@@ -1,3 +1,5 @@
+//! This is an example map generator, it generates a super basic map layout
+//! of rooms and corridors
 use super::element::*;
 
 use super::DungeonBasic;

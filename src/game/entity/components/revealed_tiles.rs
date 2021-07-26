@@ -1,3 +1,4 @@
+//! Stores what tiles have been revealed
 use super::{HashMap, RevealedTiles};
 use crate::sys::element::Map;
 
