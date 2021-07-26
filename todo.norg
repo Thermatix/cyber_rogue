@@ -1,19 +1,19 @@
 [ ] Add docstrings to all modules
-  [ ] sys:
-    [ ] entity_manager
+  [x] sys:
+    [e] entity_manager
     [x] state
-    [ ] element
-      [ ] containers
-      [ ] map
-      [ ] map_generator
-      [ ] map_list
-      [ ] tile
-      [ ] tile_set
-      [ ] tile_set_list
-[ ] utils
-      [ ] find_by
-    [ ] widgets/map
-      [ ] rect
+    [x] element
+      [e] containers
+      [x] map
+      [x] map_generator
+      [x] map_list
+      [e] tile
+      [x] tile_set
+      [x] tile_set_list
+    [x] utils
+      [x] find_by
+      [x] widgets/map
+        [x] rect
   [ ] game:
     [ ] entity/components
       [ ] event_stream

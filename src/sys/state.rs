@@ -1,3 +1,14 @@
+//! Handles state of the game world
+//!
+//! Provides the following functionality:
+//! - rendering
+//! - new maps
+//! - new entities
+//! - player input
+//! - game loop
+//! NOTE: Most if not all of these things will be moved into systems
+
+
 use rltk::{Console, GameState, Rltk, VirtualKeyCode};
 use specs::prelude::*;
 use specs::world::{EntitiesRes, EntityBuilder};
@@ -9,12 +20,15 @@ use crate::game::entity;
 use crate::game::system::*;
 use crate::sys::element;
 
+/// Represents state of the world
 pub struct State {
     pub ecs: World,
     pub dsp: Dispatcher<'static, 'static>,
 }
 
+/// impliments main functionality
 impl State {
+    /// creates and returns new state object
     pub fn new(
         build_dispatcher: &dyn Fn() -> Dispatcher<'static, 'static>,
         register_components: &dyn Fn(World) -> World,
@@ -25,6 +39,15 @@ impl State {
         }
     }
 
+    /// Renders the current map
+    /// NOTE: This will be moved into a rendering thread that will render everything
+    /// layer by layer.
+    ///
+    /// It currently works by iterating over the map and drawing tiles, if there is an
+    /// entity on that location it will draw that instead
+    ///
+    /// NOTE: This will be changed to a layer rendering system (that renders the map
+    /// entities, etc on different layers)
     fn render_map(&mut self, ctx: &mut Rltk) {
         let map_list = &self.ecs.fetch::<element::MapList>();
         let renderables = &self.ecs.read_storage::<entity::Renderable>();
@@ -74,6 +97,8 @@ impl State {
         }
     }
 
+    /// Inserts a map into the world
+    /// NOTE: Will be changed to a more hierachial tree structure
     pub fn insert_map<F>(&mut self, tile_set: &str, mut block: F)
     where
         F: FnMut(element::TileSet) -> element::Map,
@@ -94,6 +119,7 @@ impl State {
     //     };
     // }
 
+    /// Inserts a new entity into the world
     pub fn insert_entity<F>(&mut self, mut block: F) -> u32
     where
         F: FnMut(EntityBuilder) -> EntityBuilder,
@@ -101,6 +127,11 @@ impl State {
         block(self.ecs.create_entity()).build().id()
     }
 
+    /// Handles player input events
+    /// This is an event loop function
+    /// NOTE: there is an intention to move this to a system
+    /// It adds events to the main event queue
+    /// NOTE: THe main queue system will be re-written to an actual queue (:p)
     fn player_input(&mut self, ctx: &mut Rltk) {
         let mut events = self.ecs.fetch_mut::<entity::EventStream>();
         // THIS SHOULD OUTPUT TO INPUT CHANNEL AND LET SYSTEMS LOOKING
@@ -133,6 +164,7 @@ impl State {
 }
 
 impl GameState for State {
+    /// Handles processing for a single tick
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
 
