@@ -1,0 +1,41 @@
+[ ] Add docstrings to all modules
+  [ ] sys:
+    [ ] entity_manager
+    [x] state
+    [ ] element
+      [ ] containers
+      [ ] map
+      [ ] map_generator
+      [ ] map_list
+      [ ] tile
+      [ ] tile_set
+      [ ] tile_set_list
+[ ] utils
+      [ ] find_by
+    [ ] widgets/map
+      [ ] rect
+  [ ] game:
+    [ ] entity/components
+      [ ] event_stream
+      [ ] event_value
+      [ ] field_of_view
+      [ ] location
+      [ ] position
+      [ ] renderable
+      [ ] player
+      [ ] revealed_tiles
+      [ ] sense_of_touch
+    [ ] generator
+      [ ] dungeon_basic
+      [ ] map_simple
+    [ ] system
+      [ ] entity
+        [ ] movement
+        [ ] vicinity
+        [ ] visiblity
+        [ ] left_walker
+      [ ] player
+        [ ] movement
+[ ] Rebuild event queue to be more like a queue
+[ ] Rebuild input to use command pattern (command struct)
+[ ] Change movement to use direction + moment (so there is direction)
