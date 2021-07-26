@@ -1,3 +1,5 @@
+/// This is used as a container to store values for a function that can potentialy accept
+/// a variety of value types including transforming into and out of the enum
 #[derive(PartialEq, Debug)]
 pub enum FindBy<'f> {
     U(&'f usize),

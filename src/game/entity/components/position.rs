@@ -1,3 +1,5 @@
+//! NOTE: Can't recall what this is for, I think it's for interpolating between
+//! the Position component and a point (i32, i32)
 use super::Position;
 use std::ops::{Add, Sub};
 

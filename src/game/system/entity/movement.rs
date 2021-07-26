@@ -1,3 +1,4 @@
+//! The entity movement system
 use super::super::*;
 
 use super::Movement;

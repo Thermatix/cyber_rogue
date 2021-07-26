@@ -1,3 +1,4 @@
+//! This determines what is and isn't visible to the given entity
 use super::super::*;
 use super::Visibility;
 use crate::game::entity::{FieldOfView, Location, Player, Position, RevealedTiles};

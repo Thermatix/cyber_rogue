@@ -1,3 +1,4 @@
+//! For maps that that have fog, shadow, etc will keep a record of visible tiles
 use specs::prelude::*;
 
 use super::{FieldOfView, Position};

@@ -1,3 +1,5 @@
+//! This acts as a container for values for events
+//! has methods for into and from
 use super::Event;
 
 #[derive(PartialEq, Debug)]

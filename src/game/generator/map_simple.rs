@@ -1,3 +1,5 @@
+//! A map generator that generates an empty room that takes up the whole map & then fills
+//! the room with random bits of wall
 use super::element::*;
 
 use super::MapSimple;

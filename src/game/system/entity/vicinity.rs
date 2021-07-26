@@ -1,3 +1,5 @@
+//! This system is supposed to sit between any attempts to move and the actual move
+//! To detrmine if the enity can actually move
 use super::super::*;
 use crate::game::entity::{EventStream, Position, SenseOfTouch};
 use crate::sys::element::{MapList, TileSetList};

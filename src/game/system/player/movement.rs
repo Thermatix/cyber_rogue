@@ -1,4 +1,5 @@
-use super::super::*;
+//! Transforms user direction keypresses into movement events
+ use super::super::*;
 
 use super::Movement;
 use crate::game::entity::{components::EventValue, EventStream, Player};

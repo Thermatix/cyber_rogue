@@ -1,3 +1,4 @@
+//! Stores the location for given entity
 use super::Location;
 
 impl Location {
