@@ -5,6 +5,7 @@ use specs_derive::*;
 use std::cmp::{max, min};
 use std::collections::HashMap;
 
+#[macro_use]
 use crate::sys::element::{Map, Tile, TileSet};
 
 pub mod event_stream;
@@ -15,6 +16,7 @@ mod player;
 mod position;
 mod renderable;
 mod revealed_tiles;
+
 // mod sense_of_touch;
 
 #[derive(Component, PartialEq, Debug)]
@@ -36,7 +38,7 @@ pub struct Renderable {
     pub bg: RGB,
 }
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct LeftMover {}
 
 #[derive(Component, Debug)]

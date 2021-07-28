@@ -56,7 +56,6 @@ impl State {
         let player = &self.ecs.read_storage::<entity::Player>();
         let entity_store = &self.ecs.fetch::<EntitiesRes>();
 
-        // Store and use handler function that returns the map and tile_set
         let mut y = 0;
         let mut x = 0;
 

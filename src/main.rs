@@ -2,13 +2,16 @@
 #![allow(unused_imports)]
 #![allow(unused_must_use)]
 
+#[macro_use]
+extern crate mrusty;
+
 mod prelude;
 use game::entity::components::*;
 use prelude::*;
 
 fn main() {
     use game::entity::components::GlyphType;
-    let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
+    let context = rltk::Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
     let mut game_state = sys::State::new(
         &game::system::build_dispatcher,
         &game::entity::register_components,
@@ -46,7 +49,7 @@ fn main() {
                 .with(Location::new("Test Map"))
                 .with(EventStream::new())
                 .with(Player::new())
-                .with(FieldOfView::new(6))
+                .with(FieldOfView::new(10))
                 .with(RevealedTiles::new())
         });
         {

@@ -4,17 +4,44 @@ use specs::WorldExt;
 pub mod components;
 pub use components::*;
 
-pub fn register_components<W>(mut world: W) -> W
-where
-    W: WorldExt,
-{
-    world.register::<Position>();
-    world.register::<Renderable>();
-    world.register::<LeftMover>();
-    world.register::<Location>();
-    world.register::<Player>();
-    world.register::<RevealedTiles>();
-    world.register::<EventStream>();
-    world.register::<FieldOfView>();
-    world
+macro_rules! register_components {
+    ($($name:ident,)*) => {
+        #[derive(Debug)]
+        pub enum Component {
+            $($name(components::$name),)*
+        }
+
+        $(
+            impl From<Component> for $name {
+                fn from(v: Component) -> $name {
+                    match v {
+                        Component::$name(r) => r,
+                        _ => panic!("Expected Component::{}, received {:?}", stringify!($name), v),
+                    }
+                }
+            }
+
+            impl From<$name> for Component {
+                fn from(c: $name) -> Component {
+                    Self::$name(c)
+                }
+            }
+        )*
+
+        pub fn register_components<W: WorldExt>(mut world: W) -> W {
+            $(world.register::<$name>();)*
+            world
+        }
+    }
 }
+
+register_components!(
+    Position,
+    Renderable,
+    LeftMover,
+    Location,
+    Player,
+    RevealedTiles,
+    EventStream,
+    FieldOfView,
+);
